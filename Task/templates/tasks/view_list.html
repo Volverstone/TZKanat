@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Список задач{% endblock %}
+
+{% block content %}
+<h2>Список задач</h2>
+
+<!-- Форма поиска, фильтра и сортировки -->
+<form method="get" style="margin-bottom: 20px;">
+    <input type="text" name="q" placeholder="Поиск..." value="{{ search_query }}">
+
+    <select name="status">
+        <option value="">Все</option>
+        <option value="done" {% if status_filter == 'done' %}selected{% endif %}>Выполнено</option>
+        <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>В процессе</option>
+    </select>
+
+    <select name="sort">
+        <option value="">Без сортировки</option>
+        <option value="date" {% if sort_option == 'date' %}selected{% endif %}>По дате</option>
+        <option value="status" {% if sort_option == 'status' %}selected{% endif %}>По статусу</option>
+    </select>
+
+    <button type="submit">Применить</button>
+</form>
+
+<!-- Список задач -->
+<ul>
+{% for task in tasks %}
+    <li>
+        <a href="{% url 'task_detail' task.pk %}">{{ task.title }}</a> -
+        {% if task.status %}✅ Выполнено{% else %}⏳ В процессе{% endif %}
+    </li>
+{% empty %}
+    <li>Нет задач</li>
+{% endfor %}
+</ul>
+
+<!-- Пагинация -->
+{% if is_paginated %}
+    <div class="pagination" style="margin-top: 20px;">
+        {% if page_obj.has_previous %}
+            <a href="?{% if search_query %}q={{ search_query }}&{% endif %}
+                      {% if status_filter %}status={{ status_filter }}&{% endif %}
+                      {% if sort_option %}sort={{ sort_option }}&{% endif %}
+                      page={{ page_obj.previous_page_number }}">← Назад</a>
+        {% endif %}
+
+        <span>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
+
+        {% if page_obj.has_next %}
+            <a href="?{% if search_query %}q={{ search_query }}&{% endif %}
+                      {% if status_filter %}status={{ status_filter }}&{% endif %}
+                      {% if sort_option %}sort={{ sort_option }}&{% endif %}
+                      page={{ page_obj.next_page_number }}">Вперёд →</a>
+        {% endif %}
+    </div>
+{% endif %}
+
+<a href="{% url 'task_create' %}">➕ Добавить новую задачу</a>
+{% endblock %}

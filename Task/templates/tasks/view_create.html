@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Создать задачу{% endblock %}
+
+{% block content %}
+<h2>Создать новую задачу</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Сохранить</button>
+</form>
+
+<a href="{% url 'task_list' %}">← Назад к списку задач</a>
+{% endblock %}

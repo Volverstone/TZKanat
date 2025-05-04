@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Task Manager{% endblock %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f9f4f4;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        footer {
+            background: #333;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+        }
+        header a, footer a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .logout-form {
+            margin: 0;
+            display: inline;
+        }
+        .logout-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 0;
+            font: inherit;
+        }
+        main {
+            padding: 2rem;
+            background: #ffffff;
+            margin: 1rem auto;
+            max-width: 700px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><a href="{% url 'task_list' %}">Task Manager</a></h1>
+        <nav>
+            {% if user.is_authenticated %}
+                <div class="user-info">
+                    <span>Привет, {{ user.username }}</span>
+                    <form class="logout-form" action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="logout-btn">Выйти</button>
+                    </form>
+                </div>
+            {% else %}
+                <div class="auth-links">
+                    <a href="{% url 'login' %}">Вход</a>
+                    <a href="{% url 'register' %}">Регистрация</a>
+                </div>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>© 2025 Task Manager</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ task.title }}{% endblock %}
+
+
+{% block content %}
+<h2>{{ task.title }}</h2>
+<a href="{% url 'task_edit' task.id %}">✏️ Редактировать задачу</a>
+<p><strong>Описание:</strong>
+    <span style="word-break: break-word;">{{ task.description }}</span>
+</p>
+<p><strong>Статус:</strong> {% if task.status %} Выполнено {% else %} В процессе {% endif %}</p>
+
+<a href="{% url 'task_list' %}">← Назад к списку задач</a>
+{% endblock %}
